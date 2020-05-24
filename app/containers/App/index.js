@@ -1,50 +1,69 @@
-/**
- *
- * App
- *
- * This component is the skeleton around the actual pages, and should only
- * contain code that should be seen on all pages. (e.g. navigation bar)
- */
-
+import PropTypes from 'prop-types';
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
-import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createBoardAction } from '../Board/actions';
+import Board from '../Board';
+import Stopwatch from '../../components/Stopwatch';
+import TopBar from '../TopBar';
+import boardPropType from '../Board/propType';
+import './styles.css';
 
-import HomePage from 'containers/HomePage/Loadable';
-import FeaturePage from 'containers/FeaturePage/Loadable';
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import Header from 'components/Header';
-import Footer from 'components/Footer';
+import mySaga from '../Board/sagas';
 
-import GlobalStyle from '../../global-styles';
+import { useInjectReducer } from '../../utils/injectReducer';
+import { useInjectSaga } from '../../utils/injectSaga';
 
-const AppWrapper = styled.div`
-  max-width: calc(768px + 16px * 2);
-  margin: 0 auto;
-  display: flex;
-  min-height: 100%;
-  padding: 0 16px;
-  flex-direction: column;
-`;
+import appReducer from './reducer';
 
-export default function App() {
+const App = ({ createBoardErrorCounter, board = null, onNeedBoard }) => {
+  useInjectReducer({ key: 'Home', reducer: appReducer });
+  useInjectSaga({ key: 'Home', saga: mySaga });
+
+  if (createBoardErrorCounter > 5) {
+    return (
+      <div> {`check your ${process.env.MINESWEEPER_API_BASE_URL} stuff`} </div>
+    );
+  }
+  if (!board) {
+    onNeedBoard();
+  }
+  if (!board) {
+    return <div> Loading </div>;
+  }
   return (
-    <AppWrapper>
-      <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
-      >
-        <meta name="description" content="A React.js Boilerplate application" />
-      </Helmet>
-      <Header />
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route path="/features" component={FeaturePage} />
-        <Route path="" component={NotFoundPage} />
-      </Switch>
-      <Footer />
-      <GlobalStyle />
-    </AppWrapper>
+    <div className="homeContainer">
+      <TopBar message="minesweeper" />
+      <Board board={board} />
+      <Stopwatch epoch={board.begin_epoch_ms} enabled={!board.mines} />
+    </div>
   );
-}
+};
+
+const mapStateToProps = state => {
+  const { board, createBoardErrorCounter } = state.Home || {};
+  return {
+    board,
+    createBoardErrorCounter,
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  onNeedBoard: () => dispatch(createBoardAction()),
+});
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+App.defaultProps = {
+  board: null,
+};
+
+App.propTypes = {
+  board: boardPropType,
+  onNeedBoard: PropTypes.func.isRequired,
+  createBoardErrorCounter: PropTypes.number.isRequired,
+};
+
+export default withConnect(App);

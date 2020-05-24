@@ -1,0 +1,10 @@
+
+.message {
+  font-size: 80px;
+}
+
+.topBarContainer {
+  display: flex;
+  height: 200px;
+  align-items: center;
+}

@@ -113,6 +113,7 @@ module.exports = options => ({
     // drop any unreachable code.
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
+      MINESWEEPER_API_BASE_URL: process.env.MINESWEEPER_API_BASE_URL,
     }),
   ]),
   resolve: {
