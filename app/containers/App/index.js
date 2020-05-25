@@ -32,7 +32,7 @@ const sidebarStyle = {
   display: 'flex',
   flexFlow: 'column nowrap',
   width: '190px',
-  height: '500px',
+  height: '550px',
   marginLeft: '5px',
   borderRadius: '30px',
   borderStyle: 'solid',

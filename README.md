@@ -6,3 +6,4 @@ You can visit the game at https://master.d1eyn4tierp0rk.amplifyapp.com/
 
 Bootstrapped from: https://github.com/react-boilerplate/react-boilerplate
 
+<img alt="App" src="./showcase.png">
