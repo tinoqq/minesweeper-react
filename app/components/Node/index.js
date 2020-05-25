@@ -28,7 +28,7 @@ function Node({
       if (event) event.preventDefault();
       onFlagNode();
     });
-  });
+  }, []);
   const imgStyle = { height: '80%' };
   const color = hint || hint === '0' || hint === 0 ? 'white' : 'grey';
   let content;
