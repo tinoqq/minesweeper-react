@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import PropType from 'prop-types';
-import './styles.css';
 
-const epochToSeconds = (epoch) => Math.floor((Date.now() - epoch) / 1000);
+const epochToSeconds = epoch => Math.floor((Date.now() - epoch) / 1000);
 
 const Stopwatch = ({ epoch, enabled }) => {
   const [seconds, setSeconds] = useState(epochToSeconds(epoch));
@@ -14,11 +12,7 @@ const Stopwatch = ({ epoch, enabled }) => {
       }, 1000);
     }
   });
-  return (
-    <div className="stopwatch">
-      {seconds}
-    </div>
-  );
+  return <div className="stopwatch">{`elapsed seconds: ${seconds}`}</div>;
 };
 
 Stopwatch.propTypes = {

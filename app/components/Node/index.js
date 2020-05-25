@@ -1,4 +1,8 @@
-import React from 'react';
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-undef */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import whiteFlagPng from '../../resources/white_flag.png';
 import bombPng from '../../resources/bomb.png';
@@ -7,49 +11,60 @@ import explosionPng from '../../resources/boom.png';
 function Node({
   x,
   y,
-  onClick,
-  onRightClick,
+  onRevealNode,
+  onFlagNode,
+  onQuestionMarkNode,
   explosion,
   mine,
   hint,
   flag,
+  questionMark,
+  size,
 }) {
-  // useEffect(() => {
-  //   document.getElementById(`node-${x}.${y}`)?.addEventListener('contextmenu', (event) => {
-  //     if (event) event.preventDefault();
-  //     onRightClick();
-  //   });
-  // }, [flag, onRightClick, x, y])
-
+  useEffect(() => {
+    const elem = document.getElementById(`node-${x}.${y}`);
+    if (!elem) return;
+    elem.addEventListener('contextmenu', event => {
+      if (event) event.preventDefault();
+      onFlagNode();
+    });
+  });
+  const imgStyle = { height: '80%' };
   const color = hint || hint === '0' || hint === 0 ? 'white' : 'grey';
-  const flagImg = (<img src={whiteFlagPng} style={{ height: '40px' }} alt="T" />);
-  const bombImg = (<img src={bombPng} style={{ height: '40px' }} alt="T" />);
-  const explosionImg = (<img src={explosionPng} style={{ height: '40px' }} alt="T" />);
   let content;
   if (color === 'grey' && flag) {
-    content = flagImg;
+    content = <img src={whiteFlagPng} style={imgStyle} alt="T" />;
   }
   if (color === 'white' && hint > 0) {
     content = hint;
   }
   if (mine) {
-    content = bombImg;
+    content = <img src={bombPng} style={imgStyle} alt="T" />;
   }
   if (explosion) {
-    content = explosionImg;
+    content = <img src={explosionPng} style={imgStyle} alt="T" />;
+  }
+  if (questionMark) {
+    content = '?';
   }
   return (
     <div
       id={`node-${x}.${y}`}
-      onClick={(i) => (i.altKey ? onRightClick() : onClick())}
+      onClick={i => {
+        if (i.altKey) {
+          onQuestionMarkNode();
+        } else {
+          onRevealNode();
+        }
+      }}
       style={{
-        height: '50px',
-        width: '50px',
+        height: `${size}px`,
+        width: `${size}px`,
         borderStyle: 'solid',
         borderWidth: 'thin',
         background: color,
         margin: '1px',
-        fontSize: 28,
+        fontSize: `${Math.floor(size * 0.6)}px`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -67,16 +82,18 @@ Node.defaultProps = {
   mine: false,
 };
 
-
 Node.propTypes = {
-  onRightClick: PropTypes.func.isRequired,
+  onRevealNode: PropTypes.func.isRequired,
+  onFlagNode: PropTypes.func.isRequired,
+  onQuestionMarkNode: PropTypes.func.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
   hint: PropTypes.number,
   flag: PropTypes.bool,
+  questionMark: PropTypes.bool,
   explosion: PropTypes.bool,
   mine: PropTypes.bool,
+  size: PropTypes.number,
 };
 
 export default Node;

@@ -5,12 +5,9 @@ import './styles.css';
 
 const TopBar = ({ message }) => (
   <div className="topBarContainer">
-    <div className="message">
-      {message}
-    </div>
+    <div className="message">{message}</div>
   </div>
 );
-
 
 TopBar.propTypes = {
   message: PropTypes.string.isRequired,

@@ -8,4 +8,8 @@ export const CREATE_BOARD = 'CREATE_BOARD';
 
 export const CLICK_NODE = 'CLICK_NODE';
 
-export const RIGHT_CLICK_NODE = 'RIGHT_CLICK_NODE';
+export const SAVE_BOARD = 'SAVE_BOARD';
+
+export const RETRIEVE_BOARD = 'RETRIEVE_BOARD';
+
+export const BOARD_SAVED = 'BOARD_SAVED';

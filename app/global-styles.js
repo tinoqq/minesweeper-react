@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyle = createGlobalStyle`
   html,
   body {
+    background-color: #c3c9b9;
     height: 100%;
     width: 100%;
     line-height: 1.5;
@@ -16,14 +17,13 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
-  #app {
-    background-color: #fafafa;
+  .app {
     min-height: 100%;
     min-width: 100%;
   }
 
   p,
-  label {
+  labell {
     font-family: Georgia, Times, 'Times New Roman', serif;
     line-height: 1.5em;
   }

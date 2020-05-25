@@ -2,12 +2,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import Node from '../../components/Node';
-import { rightClickNodeAction, clickNodeAction } from './actions';
+import { clickNodeAction } from './actions';
 import range from '../../helpers/range';
 
 const serializePosition = (x, y) => `${x}.${y}`;
 
-const Board = ({ board, onClickNode, onRightClickNode }) => (
+const Board = ({
+  tileSize,
+  board,
+  onFlagNode,
+  onQuestionMarkNode,
+  onRevealNode,
+}) => (
   <div>
     {range(board.rows).map(y => (
       <div key={`y${y}`} style={{ display: 'flex', flexFlow: 'row nowrap' }}>
@@ -18,11 +24,13 @@ const Board = ({ board, onClickNode, onRightClickNode }) => (
             key={`node-${x}.${y}`}
             hint={board.hints[serializePosition(x, y)]}
             flag={board.flags[serializePosition(x, y)]}
+            questionMark={board.questionMarks[serializePosition(x, y)]}
             explosion={serializePosition(x, y) === board.explosion_position}
             mine={board.mines && board.mines[serializePosition(x, y)]}
-            size={30}
-            onClick={() => onClickNode(x, y, board.id)}
-            onRightClick={() => onRightClickNode(x, y, board.id)}
+            size={tileSize}
+            onFlagNode={() => onFlagNode(x, y, board.id)}
+            onQuestionMarkNode={() => onQuestionMarkNode(x, y, board.id)}
+            onRevealNode={() => onRevealNode(x, y, board.id)}
           />
         ))}
       </div>
@@ -35,9 +43,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onClickNode: (x, y, boardId) => dispatch(clickNodeAction(x, y, boardId)),
-  onRightClickNode: (x, y, boardId) =>
-    dispatch(rightClickNodeAction(x, y, boardId)),
+  onQuestionMarkNode: (x, y, boardId) =>
+    dispatch(clickNodeAction(x, y, boardId, 'toggle_question')),
+  onFlagNode: (x, y, boardId) =>
+    dispatch(clickNodeAction(x, y, boardId, 'toggle_flag')),
+  onRevealNode: (x, y, boardId) =>
+    dispatch(clickNodeAction(x, y, boardId, 'reveal')),
 });
 
 const withConnect = connect(
@@ -60,8 +71,10 @@ Board.propTypes = {
     explosion_position: PropTypes.string,
     mines: PropTypes.shape({}),
   }),
-  onRightClickNode: PropTypes.func.isRequired,
-  onClickNode: PropTypes.func.isRequired,
+  onRevealNode: PropTypes.func.isRequired,
+  onQuestionMarkNode: PropTypes.func.isRequired,
+  onFlagNode: PropTypes.func.isRequired,
+  tileSize: PropTypes.number,
 };
 
 export default withConnect(Board);
